@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #fff5f2;
+  --color-brand-100: #ffe6df;
+  --color-brand-200: #ffc9bd;
+  --color-brand-300: #ffa18c;
+  --color-brand-400: #ff6e4d;
+  --color-brand-500: #ff4e17; /* Brave Orange-Red */
+  --color-brand-600: #e03a08;
+  --color-brand-700: #b82a00;
+  --color-brand-850: #8f1f00;
+  
+  --color-brave-orange: #ff4e17;
+  --color-brave-yellow: #ff9000;
+  
+  --color-bg-main: var(--background);
+  --color-text-main: var(--foreground);
+  --color-bg-card: var(--card-bg);
+  --color-border-card: var(--card-border);
+  --color-text-muted: var(--text-muted);
+  --color-bg-sidebar: var(--sidebar-bg);
+  --color-border-sidebar: var(--sidebar-border);
+}
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Warm light theme by default */
+  --background: #fdfcfb;
+  --foreground: #1d1612;
+  --card-bg: #ffffff;
+  --card-border: #e6e0d5;
+  --text-muted: #8a7b70;
+  --accent-glow: rgba(255, 78, 23, 0.08);
+  
+  --sidebar-bg: #f5f2ee;
+  --sidebar-border: #ded8cf;
+  
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+}
+
+.dark {
+  /* Warm dark theme when .dark class is added */
+  --background: #0a0705;
+  --foreground: #fcfbfb;
+  --card-bg: #120e0b;
+  --card-border: #221a15;
+  --text-muted: #a39489;
+  --accent-glow: rgba(255, 78, 23, 0.15);
+  
+  --sidebar-bg: #0e0a08;
+  --sidebar-border: #1d1612;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Typography styles */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-system {
+  font-family: var(--font-mono);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Background grid radial pattern */
+.brave-grid {
+  background-size: 32px 32px;
+  background-image: 
+    radial-gradient(circle, rgba(255, 78, 23, 0.025) 1px, transparent 1px);
+}
+
+/* Linear grid pattern */
+.brave-linear-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 78, 23, 0.012) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 78, 23, 0.012) 1px, transparent 1px);
+}
+
+/* Custom glowing effects */
+.brave-glow {
+  box-shadow: 0 0 20px rgba(255, 78, 23, 0.15);
+}
+
+.brave-glow-button {
+  box-shadow: 0 4px 15px rgba(255, 78, 23, 0.3);
+}
+
+.brave-glow-button:hover {
+  box-shadow: 0 6px 20px rgba(255, 78, 23, 0.5);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-500);
+  border-radius: 9px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff9000;
+}

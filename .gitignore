@@ -1,0 +1,19 @@
+# Dependency directories
+node_modules/
+frontend/node_modules/
+
+# Production build outputs
+frontend/dist/
+
+# Python virtual environment and cache files
+backend/venv/
+backend/__pycache__/
+__pycache__/
+
+# SQLite local database
+backend/nagapavan.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.log
