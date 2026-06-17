@@ -4,11 +4,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
 
-import models
 import schemas
-from database import Base, engine, SessionLocal, get_db
+from database import get_db
 
 # Helper function to generate clean slugs from category names
 def slugify(text: str) -> str:
@@ -51,46 +49,55 @@ SEED_DATA = {
     "Miscellaneous Household Items": ["Buckets", "Mugs", "Brooms", "Mops", "Scrubbers", "Clothes clips", "Storage containers"]
 }
 
-def seed_database(db: Session):
+def seed_database(db):
     # Verify if database has already been seeded to avoid duplicates
-    if db.query(models.Category).first() is not None:
+    if db.categories.find_one() is not None:
         print("Database already seeded. Skipping...")
         return
         
     print("Database is empty. Initiating seeding for 30 retail domains...")
+    category_id_counter = 1
+    product_id_counter = 1
+    
+    categories_to_insert = []
+    products_to_insert = []
+    
     for category_name, product_list in SEED_DATA.items():
-        # Create category
-        category = models.Category(
-            name=category_name,
-            slug=slugify(category_name)
-        )
-        db.add(category)
-        db.flush()  # Obtain the category.id
+        cat_id = category_id_counter
+        category_id_counter += 1
         
-        # Add corresponding seed products
+        categories_to_insert.append({
+            "id": cat_id,
+            "name": category_name,
+            "slug": slugify(category_name)
+        })
+        
         for prod_name in product_list:
-            product = models.Product(
-                category_id=category.id,
-                name=prod_name,
-                description=f"Fresh and high-quality {prod_name.lower()} available at Naga Pavan Kirana and General Merchants.",
-                default_price="Market Price",
-                in_stock=True
-            )
-            db.add(product)
+            products_to_insert.append({
+                "id": product_id_counter,
+                "category_id": cat_id,
+                "name": prod_name,
+                "description": f"Fresh and high-quality {prod_name.lower()} available at Naga Pavan Kirana and General Merchants.",
+                "default_price": "Market Price",
+                "in_stock": True
+            })
+            product_id_counter += 1
             
-    db.commit()
+    if categories_to_insert:
+        db.categories.insert_many(categories_to_insert)
+    if products_to_insert:
+        db.products.insert_many(products_to_insert)
+        
     print("Seeding completed successfully.")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize database tables on app startup
-    Base.metadata.create_all(bind=engine)
     # Seed categories and products
-    db = SessionLocal()
+    db = get_db()
     try:
         seed_database(db)
-    finally:
-        db.close()
+    except Exception as e:
+        print(f"Error during seeding: {e}")
     yield
 
 # Initialize FastAPI with metadata for swagger/redoc documentation
@@ -113,24 +120,37 @@ app.add_middleware(
 # --- API ROUTES ---
 
 @app.get("/api/categories", response_model=List[schemas.Category])
-async def get_categories(db: Session = Depends(get_db)):
+async def get_categories(db=Depends(get_db)):
     """Fetch all available inventory categories."""
-    categories = db.query(models.Category).order_by(models.Category.name).all()
+    categories = list(db.categories.find({}, {"_id": 0}))
+    # Sort categories by name alphabetically
+    categories.sort(key=lambda x: x["name"])
     return categories
 
 @app.get("/api/products", response_model=List[schemas.Product])
-async def get_products(category_id: Optional[int] = None, db: Session = Depends(get_db)):
+async def get_products(category_id: Optional[int] = None, db=Depends(get_db)):
     """
     Fetch all products. 
     Supports optional category filtering via query string `?category_id=`.
     """
-    query = db.query(models.Product)
+    filter_query = {}
     if category_id is not None:
-        query = query.filter(models.Product.category_id == category_id)
-    return query.order_by(models.Product.name).all()
+        filter_query["category_id"] = category_id
+    
+    products = list(db.products.find(filter_query, {"_id": 0}))
+    # Retrieve categories to build dynamic parent mapping
+    categories_list = list(db.categories.find({}, {"_id": 0}))
+    cat_map = {c["id"]: c for c in categories_list}
+    
+    for prod in products:
+        prod["category"] = cat_map.get(prod["category_id"])
+        
+    # Sort products by name alphabetically
+    products.sort(key=lambda x: x["name"])
+    return products
 
 @app.get("/api/search", response_model=List[schemas.Product])
-async def search_products(query: str, db: Session = Depends(get_db)):
+async def search_products(query: str, db=Depends(get_db)):
     """
     Perform a real-time, case-insensitive substring database lookup 
     across product name and description fields.
@@ -138,50 +158,64 @@ async def search_products(query: str, db: Session = Depends(get_db)):
     if not query.strip():
         return []
     
-    search_pattern = f"%{query}%"
-    results = db.query(models.Product).filter(
-        (models.Product.name.ilike(search_pattern)) |
-        (models.Product.description.ilike(search_pattern))
-    ).order_by(models.Product.name).all()
+    regex = re.compile(re.escape(query), re.IGNORECASE)
+    products = list(db.products.find({
+        "$or": [
+            {"name": regex},
+            {"description": regex}
+        ]
+    }, {"_id": 0}))
     
-    return results
+    categories_list = list(db.categories.find({}, {"_id": 0}))
+    cat_map = {c["id"]: c for c in categories_list}
+    for prod in products:
+        prod["category"] = cat_map.get(prod["category_id"])
+        
+    products.sort(key=lambda x: x["name"])
+    return products
 
 @app.post("/api/products", response_model=schemas.Product, status_code=status.HTTP_201_CREATED)
-async def create_product(product_in: schemas.ProductCreate, db: Session = Depends(get_db)):
+async def create_product(product_in: schemas.ProductCreate, db=Depends(get_db)):
     """Insert new retail coordinates / product entry validated via Pydantic schema."""
     # Check if the associated category exists
-    category = db.query(models.Category).filter(models.Category.id == product_in.category_id).first()
+    category = db.categories.find_one({"id": product_in.category_id}, {"_id": 0})
     if not category:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, 
             detail=f"Category with ID {product_in.category_id} does not exist."
         )
         
-    db_product = models.Product(
-        category_id=product_in.category_id,
-        name=product_in.name,
-        description=product_in.description,
-        default_price=product_in.default_price,
-        in_stock=product_in.in_stock
-    )
+    # Get next product ID sequentially
+    max_prod = db.products.find_one(sort=[("id", -1)])
+    next_id = (max_prod["id"] + 1) if max_prod else 1
     
-    db.add(db_product)
-    db.commit()
-    db.refresh(db_product)
+    db_product = {
+        "id": next_id,
+        "category_id": product_in.category_id,
+        "name": product_in.name,
+        "description": product_in.description,
+        "default_price": product_in.default_price,
+        "in_stock": product_in.in_stock
+    }
+    
+    db.products.insert_one(db_product)
+    db_product.pop("_id", None)
+    
+    # Add category reference to object
+    db_product["category"] = category
     return db_product
 
 @app.delete("/api/products/{id}", status_code=status.HTTP_200_OK)
-async def delete_product(id: int, db: Session = Depends(get_db)):
+async def delete_product(id: int, db=Depends(get_db)):
     """Cleanly remove an explicit product record matching the primary index coordinate."""
-    product = db.query(models.Product).filter(models.Product.id == id).first()
+    product = db.products.find_one({"id": id})
     if not product:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Product with ID {id} not found."
         )
     
-    db.delete(product)
-    db.commit()
+    db.products.delete_one({"id": id})
     return {"detail": f"Product with ID {id} has been successfully deleted."}
 
 @app.post("/api/auth/login")
@@ -195,16 +229,22 @@ async def admin_login(payload: schemas.AdminLogin):
     )
 
 @app.patch("/api/products/{id}/toggle-stock", response_model=schemas.Product)
-async def toggle_product_stock(id: int, db: Session = Depends(get_db)):
+async def toggle_product_stock(id: int, db=Depends(get_db)):
     """Instantly toggle the stock availability state (in_stock) of a product."""
-    product = db.query(models.Product).filter(models.Product.id == id).first()
+    product = db.products.find_one({"id": id})
     if not product:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Product with ID {id} not found."
         )
     
-    product.in_stock = not product.in_stock
-    db.commit()
-    db.refresh(product)
+    new_in_stock = not product.get("in_stock", True)
+    db.products.update_one({"id": id}, {"$set": {"in_stock": new_in_stock}})
+    
+    product["in_stock"] = new_in_stock
+    product.pop("_id", None)
+    
+    # Include category details
+    category = db.categories.find_one({"id": product["category_id"]}, {"_id": 0})
+    product["category"] = category
     return product

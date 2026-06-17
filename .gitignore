@@ -13,6 +13,10 @@ __pycache__/
 # SQLite local database
 backend/nagapavan.db
 
+# Environment variables containing credentials
+.env
+backend/.env
+
 # OS generated files
 .DS_Store
 Thumbs.db
