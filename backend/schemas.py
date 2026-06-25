@@ -1,5 +1,11 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import List, Optional
+
+# Brand Option Schemas
+class BrandOption(BaseModel):
+    name: str
+    price: Optional[str] = "Market Price"
+    in_stock: bool = True
 
 # Category Schemas
 class CategoryBase(BaseModel):
@@ -21,6 +27,7 @@ class ProductBase(BaseModel):
     description: Optional[str] = None
     default_price: Optional[str] = None
     in_stock: bool = True
+    brand_options: List[BrandOption] = []
 
 class ProductCreate(ProductBase):
     category_id: int

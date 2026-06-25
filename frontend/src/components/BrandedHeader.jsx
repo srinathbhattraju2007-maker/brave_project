@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Sun, Moon, Menu, ShieldCheck, ShieldAlert, Info, MapPin, Clock } from 'lucide-react';
+import { Search, Sun, Moon, Menu, ShieldCheck, ShieldAlert, Info, MapPin, Clock, LogOut } from 'lucide-react';
 
 export default function BrandedHeader({ 
   searchQuery, 
@@ -10,7 +10,8 @@ export default function BrandedHeader({
   onMenuToggle,
   lang,
   setLang,
-  t
+  t,
+  onExit
 }) {
   const translate = t || ((k) => k);
   return (
@@ -30,12 +31,7 @@ export default function BrandedHeader({
         <div className="flex items-center gap-3">
           {/* Logo */}
           <div className="font-display font-extrabold text-2xl tracking-tighter text-text-main leading-none">
-            {lang === 'en' ? 'KIRANA' : 'కిరాణా'}<span className="text-[#ff4e17]">.</span>
-          </div>
-          <div className="hidden md:block border-l border-border-card pl-3 h-5">
-            <span className="text-[8px] font-mono-system text-[#ff4e17] bg-[#ff4e17]/10 px-2 py-0.5 rounded-full border border-[#ff4e17]/20 font-bold uppercase tracking-wider">
-              V3.0 LIVE
-            </span>
+            {lang === 'en' ? 'MERCHANDISE' : 'మర్చండైజ్'}<span className="text-[#bd00ff]">.</span>
           </div>
         </div>
       </div>
@@ -50,7 +46,7 @@ export default function BrandedHeader({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={translate('searchPlaceholder')}
-          className="block w-full pl-10 pr-4 py-2 border border-border-card rounded-full bg-bg-card text-text-main placeholder-text-muted/50 focus:outline-none focus:border-[#ff4e17] focus:ring-1 focus:ring-[#ff4e17]/30 font-mono-system text-[11px] tracking-wider uppercase transition-all"
+          className="block w-full pl-10 pr-4 py-2 border border-border-card rounded-full bg-bg-card text-text-main placeholder-text-muted/50 focus:outline-none focus:border-[#bd00ff] focus:ring-1 focus:ring-[#bd00ff]/30 font-mono-system text-[11px] tracking-wider uppercase transition-all"
         />
       </div>
 
@@ -60,7 +56,7 @@ export default function BrandedHeader({
         {/* Language Toggle Button */}
         <button
           onClick={() => setLang(lang === 'en' ? 'te' : 'en')}
-          className="px-3 py-1.5 border border-border-card bg-bg-card text-[#ff4e17] hover:text-white hover:bg-[#ff4e17] rounded-full transition-all cursor-pointer font-bold uppercase"
+          className="btn-secondary px-3 py-1.5 text-[9px] rounded-full font-bold uppercase"
         >
           {lang === 'en' ? 'తెలుగు' : 'ENGLISH'}
         </button>
@@ -75,8 +71,8 @@ export default function BrandedHeader({
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 border border-border-card bg-bg-card rounded-full">
           {isAdmin ? (
             <>
-              <ShieldCheck className="h-3.5 w-3.5 text-[#ff4e17]" />
-              <span className="text-[#ff4e17] font-bold uppercase tracking-wider">{translate('rootOp')}</span>
+              <ShieldCheck className="h-3.5 w-3.5 text-[#bd00ff]" />
+              <span className="text-[#bd00ff] font-bold uppercase tracking-wider">{translate('rootOp')}</span>
             </>
           ) : (
             <>
@@ -93,16 +89,16 @@ export default function BrandedHeader({
           </button>
           
           <div className="absolute right-0 top-full mt-2 w-64 p-4 rounded-2xl bg-bg-card border border-border-card shadow-2xl opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-none transition-all duration-200 z-50 text-left">
-            <h4 className="font-display text-sm font-bold text-[#ff4e17] tracking-wider mb-2 leading-none uppercase">
+            <h4 className="font-display text-sm font-bold text-[#bd00ff] tracking-wider mb-2 leading-none uppercase">
               {translate('merchantCoords')}
             </h4>
             <div className="space-y-2 text-xs text-text-muted">
               <p className="flex items-start gap-2">
-                <MapPin className="h-3.5 w-3.5 text-[#ff4e17] shrink-0 mt-0.5" />
+                <MapPin className="h-3.5 w-3.5 text-[#bd00ff] shrink-0 mt-0.5" />
                 <span>{translate('address')}</span>
               </p>
               <p className="flex items-start gap-2">
-                <Clock className="h-3.5 w-3.5 text-[#ff4e17] shrink-0 mt-0.5" />
+                <Clock className="h-3.5 w-3.5 text-[#bd00ff] shrink-0 mt-0.5" />
                 <span>{translate('activeHours')}</span>
               </p>
             </div>
@@ -115,8 +111,21 @@ export default function BrandedHeader({
           className="p-2 border border-border-card bg-bg-card text-text-muted hover:text-text-main rounded-full transition-all cursor-pointer"
           aria-label="Toggle Theme"
         >
-          {darkMode ? <Sun className="h-4 w-4 text-[#ff4e17]" /> : <Moon className="h-4 w-4 text-[#ff4e17]" />}
+          {darkMode ? <Sun className="h-4 w-4 text-[#bd00ff]" /> : <Moon className="h-4 w-4 text-[#bd00ff]" />}
         </button>
+
+        {/* Exit Portal Button */}
+        {onExit && (
+          <button
+            onClick={onExit}
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/25 hover:text-red-300 hover:border-red-400/60 rounded-full transition-all cursor-pointer group"
+            aria-label="Exit to Portal"
+            title={translate('exitPortal')}
+          >
+            <LogOut className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
+            <span className="hidden sm:inline text-[9px] font-bold uppercase tracking-wider">{translate('exitPortal')}</span>
+          </button>
+        )}
 
       </div>
     </header>

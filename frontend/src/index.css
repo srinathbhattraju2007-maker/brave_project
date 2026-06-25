@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #fff5f2;
-  --color-brand-100: #ffe6df;
-  --color-brand-200: #ffc9bd;
-  --color-brand-300: #ffa18c;
-  --color-brand-400: #ff6e4d;
-  --color-brand-500: #ff4e17; /* Brave Orange-Red */
-  --color-brand-600: #e03a08;
-  --color-brand-700: #b82a00;
-  --color-brand-850: #8f1f00;
+  --color-brand-50: #fdf2f8;
+  --color-brand-100: #fce7f3;
+  --color-brand-200: #fbcfe8;
+  --color-brand-300: #0052ff; /* Blue/Cyan */
+  --color-brand-400: #f472b6;
+  --color-brand-500: #bd00ff; /* Pink Accent */
+  --color-brand-600: #00f0ff; /* Orange */
+  --color-brand-700: #db2777;
+  --color-brand-850: #be185d;
   
-  --color-brave-orange: #ff4e17;
-  --color-brave-yellow: #ff9000;
+  --color-brave-orange: #bd00ff;
+  --color-brave-yellow: #00f0ff;
   
   --color-bg-main: var(--background);
   --color-text-main: var(--foreground);
@@ -28,41 +28,127 @@ html, body, #root {
   padding: 0;
 }
 
+@property --stop-black {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 30%;
+}
+@property --stop-blue {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 55%;
+}
+@property --stop-cyan {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 65%;
+}
+@property --stop-pink {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 80%;
+}
+@property --stop-orange {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 95%;
+}
+
 :root {
-  /* Warm light theme by default */
-  --background: #fdfcfb;
-  --foreground: #1d1612;
-  --card-bg: #ffffff;
-  --card-border: #e6e0d5;
-  --text-muted: #8a7b70;
-  --accent-glow: rgba(255, 78, 23, 0.08);
+  /* Soft light gradient theme with premium gray shades */
+  --background: transparent;
+  --foreground: #1e293b; /* Slate-800 */
+  --card-bg: rgba(226, 232, 240, 0.85); /* Slate-200 translucent */
+  --card-border: rgba(148, 163, 184, 0.6); /* Slate-400 translucent */
+  --text-muted: #64748b; /* Slate-500 */
+  --accent-glow: rgba(189, 0, 255, 0.05);
   
-  --sidebar-bg: #f5f2ee;
-  --sidebar-border: #ded8cf;
+  --sidebar-bg: rgba(226, 232, 240, 0.7); /* Slate-200 translucent */
+  --sidebar-border: rgba(203, 213, 225, 0.65);
   
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-sans: 'Outfit', sans-serif;
+  --font-display: 'Outfit', sans-serif;
   --font-mono: 'Share Tech Mono', monospace;
 }
 
 .dark {
-  /* Warm dark theme when .dark class is added */
-  --background: #0a0705;
+  /* Premium dark gradient theme */
+  --background: transparent;
   --foreground: #fcfbfb;
-  --card-bg: #120e0b;
-  --card-border: #221a15;
-  --text-muted: #a39489;
-  --accent-glow: rgba(255, 78, 23, 0.15);
+  --card-bg: rgba(5, 5, 10, 0.7);
+  --card-border: rgba(0, 82, 255, 0.2);
+  --text-muted: #8fa0c0;
+  --accent-glow: rgba(189, 0, 255, 0.15);
   
-  --sidebar-bg: #0e0a08;
-  --sidebar-border: #1d1612;
+  --sidebar-bg: rgba(2, 2, 5, 0.75);
+  --sidebar-border: rgba(189, 0, 255, 0.25);
 }
 
 body {
-  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  background-attachment: fixed;
+  
+  /* Light mode breathing radial gradient on gray base */
+  background-image: radial-gradient(
+    circle at 50% -20%,
+    #f8fafc var(--stop-black),
+    #f1f5f9 var(--stop-blue),
+    #e2e8f0 var(--stop-cyan),
+    #cbd5e1 var(--stop-pink),
+    #94a3b8 var(--stop-orange),
+    #f8fafc 100%
+  );
+  animation: light-breathe 12s ease-in-out infinite alternate;
+}
+
+.dark body {
+  /* Dark mode breathing radial gradient (matching the user image) */
+  background-image: radial-gradient(
+    circle at 50% -20%,
+    #000000 var(--stop-black),
+    #1e3a8a var(--stop-blue),
+    #0284c7 var(--stop-cyan),
+    #bd00ff var(--stop-pink),
+    #00f0ff var(--stop-orange),
+    #0a0705 100%
+  );
+  animation: dark-breathe 12s ease-in-out infinite alternate;
+}
+
+@keyframes light-breathe {
+  0% {
+    --stop-black: 28%;
+    --stop-blue: 52%;
+    --stop-cyan: 62%;
+    --stop-pink: 77%;
+    --stop-orange: 92%;
+  }
+  100% {
+    --stop-black: 35%;
+    --stop-blue: 58%;
+    --stop-cyan: 68%;
+    --stop-pink: 83%;
+    --stop-orange: 97%;
+  }
+}
+
+@keyframes dark-breathe {
+  0% {
+    --stop-black: 26%;
+    --stop-blue: 51%;
+    --stop-cyan: 61%;
+    --stop-pink: 76%;
+    --stop-orange: 91%;
+  }
+  100% {
+    --stop-black: 34%;
+    --stop-blue: 57%;
+    --stop-cyan: 67%;
+    --stop-pink: 82%;
+    --stop-orange: 96%;
+  }
 }
 
 /* Typography styles */
@@ -84,28 +170,34 @@ h1, h2, h3, h4, h5, h6 {
 .brave-grid {
   background-size: 32px 32px;
   background-image: 
-    radial-gradient(circle, rgba(255, 78, 23, 0.025) 1px, transparent 1px);
+    radial-gradient(circle, rgba(189, 0, 255, 0.035) 1px, transparent 1px);
 }
 
 /* Linear grid pattern */
 .brave-linear-grid {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 78, 23, 0.012) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 78, 23, 0.012) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 82, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(189, 0, 255, 0.015) 1px, transparent 1px);
 }
 
 /* Custom glowing effects */
 .brave-glow {
-  box-shadow: 0 0 20px rgba(255, 78, 23, 0.15);
+  box-shadow: 0 0 25px rgba(189, 0, 255, 0.15);
 }
 
 .brave-glow-button {
-  box-shadow: 0 4px 15px rgba(255, 78, 23, 0.3);
+  box-shadow: 0 4px 15px rgba(189, 0, 255, 0.25);
 }
 
 .brave-glow-button:hover {
-  box-shadow: 0 6px 20px rgba(255, 78, 23, 0.5);
+  box-shadow: 0 6px 20px rgba(189, 0, 255, 0.45);
+}
+
+/* Glassmorphism Class */
+.glassmorphism {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 /* Custom Scrollbar */
@@ -124,5 +216,95 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff9000;
+  background: var(--color-brand-600);
 }
+
+/* Premium Buttons styled like the user screenshot */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 11px;
+  border-radius: 12px; /* modern rounded corners like the image */
+  padding: 12px 28px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  
+  /* Light mode: dark background */
+  background-color: #0f172a; /* slate-900 */
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background-color: #1e293b; /* slate-800 */
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+.dark .btn-primary {
+  /* Dark mode: solid white background */
+  background-color: #ffffff;
+  color: #000000;
+}
+.dark .btn-primary:hover {
+  background-color: #f1f5f9; /* slate-100 */
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 11px;
+  border-radius: 12px; /* modern rounded corners like the image */
+  padding: 12px 28px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  
+  /* Light mode: outlined slate border */
+  background-color: transparent;
+  color: #1e293b;
+  border: 1.5px solid #cbd5e1; /* slate-300 */
+}
+.btn-secondary:hover {
+  border-color: #0f172a;
+  background-color: rgba(30, 41, 59, 0.03);
+  transform: translateY(-1px);
+}
+.btn-secondary:active {
+  transform: translateY(0);
+}
+.dark .btn-secondary {
+  /* Dark mode: outlined white border */
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.dark .btn-secondary:hover {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Portal Container Typography Override (keep Orbitron & Rajdhani in Login Page) */
+.portal-container {
+  font-family: 'Rajdhani', sans-serif !important;
+}
+.portal-container .font-display,
+.portal-container h1, 
+.portal-container h2, 
+.portal-container h3, 
+.portal-container h4, 
+.portal-container h5, 
+.portal-container h6 {
+  font-family: 'Orbitron', sans-serif !important;
+  letter-spacing: 0.05em;
+}
+.portal-container .font-mono-system {
+  font-family: 'Share Tech Mono', monospace !important;
+}
+

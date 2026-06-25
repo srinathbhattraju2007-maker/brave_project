@@ -28,9 +28,11 @@ if MONGO_URI.startswith("mongodb"):
                     pwd = quote_plus(pwd)
                 MONGO_URI = f"{scheme}://{user}:{pwd}@{host}"
 
+import certifi
+
 print("Connecting to MongoDB Atlas database...")
 try:
-    client = MongoClient(MONGO_URI)
+    client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
     # Ping the database to force connection and test credentials immediately
     client.admin.command('ping')
     print("Connected to MongoDB successfully.")

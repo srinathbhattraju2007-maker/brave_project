@@ -11,7 +11,7 @@ const API_BASE = 'http://127.0.0.1:8000';
 const TRANSLATIONS = {
   en: {
     // Portal
-    title: "NAGA PAVAN KIRANA",
+    title: "NAGA PAVAN MERCHANDISE",
     tagline: "General Merchants",
     welcome: "Welcome to our digital store dashboard. Select your access portal below to browse our inventory items or manage operations.",
     guestTitle: "// Guest Showcase View",
@@ -83,7 +83,7 @@ const TRANSLATIONS = {
     nameRequired: "Product name is required.",
     categoryRequired: "Please select a category.",
     regSuccess: "PRODUCT REGISTERED SUCCESS.",
-    sidebarFooter: "KIRANA CORE v3.0",
+    sidebarFooter: "MERCHANDISE CORE v3.0",
     confirmRemoval: "CONFIRM REMOVAL FROM SHOWCASE",
     deleteTooltip: "Delete component",
     toggleStockTooltip: "Click to toggle stock status",
@@ -103,11 +103,20 @@ const TRANSLATIONS = {
     noSectorsMatched: "NO COMPONENT SECTORS MATCHED",
     adjustFilters: "ADJUST ACTIVE SEARCH QUERY, MANUFACTURER FILTERS, OR TOGGLE CATEGORY SECTORS.",
     manufacturerTeams: "MANUFACTURER TEAMS",
-    activeRacingSector: "CHOOSE ACTIVE RACING SECTOR"
+    activeRacingSector: "CHOOSE ACTIVE RACING SECTOR",
+    brandsTitle: "AVAILABLE BRANDS & OPTIONS",
+    brandNameLabel: "BRAND NAME",
+    brandPriceLabel: "PRICE SPEC",
+    addBrandBtn: "ADD BRAND OPTION",
+    brandSuccessMsg: "BRAND OPTION ADDED SUCCESSFULLY!",
+    noBrandsPlaceholder: "NO SPECIFIC BRANDS LISTED. AVAILABLE AT MARKET PRICE.",
+    inStockOption: "IN STOCK",
+    outOfStockOption: "OUT OF STOCK",
+    exitPortal: "EXIT PORTAL"
   },
   te: {
     // Portal
-    title: "నాగ పవన్ కిరాణా",
+    title: "నాగ పవన్ మర్చండైజ్",
     tagline: "జనరల్ మర్చంట్స్",
     welcome: "మా డిజిటల్ స్టోర్ డ్యాష్‌బోర్డ్‌కు స్వాగతం. మా ఇన్వెంటరీ వస్తువులను బ్రౌజ్ చేయడానికి లేదా కార్యకలాపాలను నిర్వహించడానికి క్రింద మీ యాక్సెస్ పోర్టల్‌ను ఎంచుకోండి.",
     guestTitle: "// గెస్ట్ షోకేస్ వీక్షణ",
@@ -125,7 +134,7 @@ const TRANSLATIONS = {
     // Riddle
     riddleTitle: "// వాల్ట్ డిక్రిప్షన్ గ్రిడ్ పొడుపుకథ",
     riddleCriteria: "యాక్సెస్ డిక్రిప్ట్ చేయడానికి పొడుపుకథను పూరించండి:",
-    riddleText: '"నా పొట్టు వలిస్తే నేను ఏడవను, కానీ మీరు ఏడుస్తారు! నేను ఏ కిరాణా వస్తువును?"',
+    riddleText: '"నా పొట్టు వలిస్తే నేను ఏడవను, కానీ మీరు ఏడుస్తారు! నేను ఏ మర్చండైజ్ వస్తువును?"',
     riddlePlaceholder: "సమాధానాన్ని నమోదు చేయండి...",
     riddleDecrypt: "సిస్టమ్‌ను డిక్రిప్ట్ చేయి",
     riddleAbort: "రద్దు చేయి",
@@ -179,7 +188,7 @@ const TRANSLATIONS = {
     nameRequired: "ఉత్పత్తి పేరు తప్పనిసరి.",
     categoryRequired: "దయచేసి ఒక వర్గాన్ని ఎంచుకోండి.",
     regSuccess: "ఉత్పత్తి విజయవంతంగా నమోదైంది.",
-    sidebarFooter: "కిరాణా కోర్ v3.0",
+    sidebarFooter: "మర్చండైజ్ కోర్ v3.0",
     confirmRemoval: "తొలగింపును నిర్ధారించండి",
     deleteTooltip: "వస్తువును తొలగించు",
     toggleStockTooltip: "స్టాక్ లభ్యతను మార్చు",
@@ -199,7 +208,16 @@ const TRANSLATIONS = {
     noSectorsMatched: "ఎటువంటి వస్తువులు లభించలేదు",
     adjustFilters: "శోధనను లేదా ఫిల్టర్లను మార్చండి.",
     manufacturerTeams: "ఉత్పత్తిదారులు",
-    activeRacingSector: "యాక్టివ్ సెకార్లను ఎంచుకోండి"
+    activeRacingSector: "యాక్టివ్ సెకార్లను ఎంచుకోండి",
+    brandsTitle: "అందుబాటులో ఉన్న బ్రాండ్లు & ఎంపికలు",
+    brandNameLabel: "బ్రాండ్ పేరు",
+    brandPriceLabel: "ధర వివరణ",
+    addBrandBtn: "బ్రాండ్‌ను జోడించు",
+    brandSuccessMsg: "బ్రాండ్ ఎంపిక విజయవంతంగా జోడించబడింది!",
+    noBrandsPlaceholder: "నిర్దిష్ట బ్రాండ్లు ఏవీ లేవు. మార్కెట్ ధర వద్ద అందుబాటులో ఉంది.",
+    inStockOption: "స్టాక్ ఉంది",
+    outOfStockOption: "స్టాక్ లేదు",
+    exitPortal: "పోర్టల్ నుండి నిష్క్రమించు"
   }
 };
 
@@ -214,10 +232,39 @@ export default function App() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState('ALL TEAMS');
+  const [selectedBrands, setSelectedBrands] = useState(['Colgate', 'Dove', 'Patanjali', 'Britannia', 'Nestle', 'ITC', 'Parle', 'Amul', 'Tata', 'HUL']);
+
+  const sanitizeProduct = (p) => {
+    if (!p) return p;
+    const copied = { ...p };
+    if (copied.description) {
+      const parts = copied.description.split(/ available at /i);
+      if (parts.length > 1) {
+        copied.description = parts[0].trim() + ".";
+      }
+    }
+    return copied;
+  };
+  const sanitizeProducts = (list) => list.map(p => sanitizeProduct(p));
+
+  const handleToggleBrand = (brand) => {
+    if (selectedBrands.includes(brand)) {
+      setSelectedBrands(selectedBrands.filter(b => b !== brand));
+    } else {
+      setSelectedBrands([...selectedBrands, brand]);
+    }
+  };
   
   // Focused Hero Product
   const [focusedProduct, setFocusedProduct] = useState(null);
+
+  // New Brand Option Form States
+  const [newBrandName, setNewBrandName] = useState('');
+  const [newBrandPrice, setNewBrandPrice] = useState('Market Price');
+  const [newBrandInStock, setNewBrandInStock] = useState(true);
+  const [brandAddSuccess, setBrandAddSuccess] = useState(false);
+  const [brandAddError, setBrandAddError] = useState('');
+  const [brandAddLoading, setBrandAddLoading] = useState(false);
 
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -338,10 +385,11 @@ export default function App() {
         url += `?category_id=${selectedCategoryIds[0]}`;
       }
       const res = await axios.get(url);
-      setProducts(res.data);
+      const sanitized = sanitizeProducts(res.data);
+      setProducts(sanitized);
       
-      if (res.data.length > 0 && !focusedProduct) {
-        setFocusedProduct(res.data[0]);
+      if (sanitized.length > 0 && !focusedProduct) {
+        setFocusedProduct(sanitized[0]);
       }
       setError('');
     } catch (err) {
@@ -358,68 +406,77 @@ export default function App() {
     }
   }, [selectedCategoryIds, viewMode]);
 
-  // Debounced search logic
+  // Client-side search logic — filters across product name, description, category name, and brand option names
   useEffect(() => {
     if (viewMode !== 'showcase') return;
-    const delayDebounceFn = setTimeout(async () => {
+    const delayDebounceFn = setTimeout(() => {
       if (searchQuery.trim()) {
         setIsSearching(true);
-        try {
-          const res = await axios.get(`${API_BASE}/api/search?query=${searchQuery}`);
-          setSearchResults(res.data);
-          if (res.data.length > 0) {
-            setFocusedProduct(res.data[0]);
-          }
-        } catch (err) {
-          console.error("Search failed:", err);
+        const q = searchQuery.toLowerCase();
+        const catMap = {};
+        categories.forEach(c => { catMap[c.id] = c.name.toLowerCase(); });
+        const filtered = products.filter(p => {
+          const nameMatch = p.name.toLowerCase().includes(q);
+          const descMatch = p.description?.toLowerCase().includes(q);
+          const catMatch = (catMap[p.category_id] || '').includes(q);
+          const brandMatch = p.brand_options && p.brand_options.some(opt => opt.name.toLowerCase().includes(q));
+          return nameMatch || descMatch || catMatch || brandMatch;
+        });
+        setSearchResults(filtered);
+        if (filtered.length > 0) {
+          setFocusedProduct(filtered[0]);
         }
       } else {
         setIsSearching(false);
         setSearchResults([]);
       }
-    }, 300);
+    }, 200);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery, viewMode]);
+  }, [searchQuery, viewMode, products, categories]);
 
   // Submit new product (Admin only)
   const handleAddProduct = async (productData) => {
     setFormSubmitLoading(true);
     try {
       const res = await axios.post(`${API_BASE}/api/products`, productData);
-      setProducts(prev => [res.data, ...prev]);
-      setFocusedProduct(res.data);
+      const sanitized = sanitizeProduct(res.data);
+      setProducts(prev => [sanitized, ...prev]);
+      setFocusedProduct(sanitized);
       if (isSearching) {
-        setSearchResults(prev => [res.data, ...prev]);
+        setSearchResults(prev => [sanitized, ...prev]);
       }
-      return res.data;
+      return sanitized;
     } finally {
       setFormSubmitLoading(false);
     }
   };
 
-  // Delete product entry (Admin only)
-  const handleDeleteProduct = async (productId) => {
-    await axios.delete(`${API_BASE}/api/products/${productId}`);
-    setProducts(prev => prev.filter(p => p.id !== productId));
+  // Add brand option to product (Admin only)
+  const handleAddBrandOption = async (productId, brandOptionData) => {
+    const res = await axios.post(`${API_BASE}/api/products/${productId}/options`, brandOptionData);
+    const sanitized = sanitizeProduct(res.data);
+    setProducts(prev => prev.map(p => p.id === productId ? sanitized : p));
     if (focusedProduct?.id === productId) {
-      setFocusedProduct(null);
+      setFocusedProduct(sanitized);
     }
     if (isSearching) {
-      setSearchResults(prev => [prev.filter(p => p.id !== productId)]);
+      setSearchResults(prev => prev.map(p => p.id === productId ? sanitized : p));
     }
+    return sanitized;
   };
 
   // Toggle stock availability (Admin only)
   const handleToggleStock = async (productId) => {
     try {
       const res = await axios.patch(`${API_BASE}/api/products/${productId}/toggle-stock`);
-      setProducts(prev => prev.map(p => p.id === productId ? res.data : p));
+      const sanitized = sanitizeProduct(res.data);
+      setProducts(prev => prev.map(p => p.id === productId ? sanitized : p));
       if (focusedProduct?.id === productId) {
-        setFocusedProduct(res.data);
+        setFocusedProduct(sanitized);
       }
       if (isSearching) {
-        setSearchResults(prev => prev.map(p => p.id === productId ? res.data : p));
+        setSearchResults(prev => prev.map(p => p.id === productId ? sanitized : p));
       }
     } catch (err) {
       console.error("Failed to toggle stock:", err);
@@ -473,7 +530,7 @@ export default function App() {
     setPortalError('');
     setSelectedCategoryIds([]);
     setSearchQuery('');
-    setSelectedBrand('ALL TEAMS');
+    setSelectedBrands(['Colgate', 'Dove', 'Patanjali', 'Britannia', 'Nestle', 'ITC', 'Parle', 'Amul', 'Tata', 'HUL']);
     setFocusedProduct(null);
   };
 
@@ -481,14 +538,18 @@ export default function App() {
   const displayedProducts = (() => {
     let list = isSearching ? searchResults : products;
 
-    if (selectedCategoryIds.length > 1) {
+    if (selectedCategoryIds.length > 0) {
       list = list.filter(p => selectedCategoryIds.includes(p.category_id));
     }
 
-    if (selectedBrand !== 'ALL TEAMS') {
+    const MANUFACTURERS = ['Colgate', 'Dove', 'Patanjali', 'Britannia', 'Nestle', 'ITC', 'Parle', 'Amul', 'Tata', 'HUL'];
+    if (selectedBrands.length < MANUFACTURERS.length) {
       list = list.filter(p => 
-        p.name.toUpperCase().includes(selectedBrand) || 
-        p.description?.toUpperCase().includes(selectedBrand)
+        selectedBrands.some(brand => 
+          p.name.toUpperCase().includes(brand.toUpperCase()) || 
+          p.description?.toUpperCase().includes(brand.toUpperCase()) ||
+          (p.brand_options && p.brand_options.some(opt => opt.name.toUpperCase().includes(brand.toUpperCase())))
+        )
       );
     }
 
@@ -528,11 +589,11 @@ export default function App() {
       {/* 1. RIDDLE POP-UP MODAL OVERLAY */}
       {showRiddleModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md font-mono-system">
-          <div className="relative w-full max-w-md p-6 rounded-3xl bg-bg-card border border-border-card shadow-2xl animate-scale-in text-center">
+          <div className="relative w-full max-w-md p-6 rounded-3xl bg-bg-card border border-border-card shadow-2xl animate-scale-in text-center portal-container">
             
             {/* Header */}
             <div className="flex flex-col items-center mb-5">
-              <div className="p-3 bg-[#ff4e17]/10 border border-[#ff4e17]/25 text-[#ff4e17] mb-3 rounded-full">
+              <div className="p-3 bg-[#bd00ff]/10 border border-[#bd00ff]/25 text-[#bd00ff] mb-3 rounded-full">
                 <LockKeyhole className="h-7 w-7" />
               </div>
               <h3 className="text-lg font-bold uppercase tracking-wider text-text-main">
@@ -544,7 +605,7 @@ export default function App() {
             </div>
 
             {/* Riddle Question Card */}
-            <div className="p-4 rounded-2xl bg-bg-main border border-border-card text-[#ff4e17] font-bold text-xs tracking-wide italic mb-4 leading-relaxed">
+            <div className="p-4 rounded-2xl bg-bg-main border border-border-card text-[#bd00ff] font-bold text-xs tracking-wide italic mb-4 leading-relaxed">
               {t('riddleText')}
             </div>
 
@@ -564,7 +625,7 @@ export default function App() {
                     value={riddleAnswer}
                     onChange={(e) => setRiddleAnswer(e.target.value)}
                     placeholder={t('riddlePlaceholder')}
-                    className="w-full px-4 py-2.5 border border-border-card rounded-full bg-bg-main text-sm text-text-main focus:outline-none focus:border-[#ff4e17] font-semibold text-center uppercase tracking-wider"
+                    className="w-full px-4 py-2.5 border border-border-card rounded-full bg-bg-main text-sm text-text-main focus:outline-none focus:border-[#bd00ff] font-semibold text-center uppercase tracking-wider"
                     autoFocus
                     required
                   />
@@ -573,14 +634,14 @@ export default function App() {
                 <div className="flex flex-col gap-2">
                   <button
                     type="submit"
-                    className="w-full py-3 px-4 rounded-full text-black font-extrabold bg-gradient-to-r from-[#ff4e17] to-[#ff9000] hover:opacity-95 transition-all text-xs cursor-pointer uppercase tracking-wider shadow-md shadow-[#ff4e17]/10"
+                    className="w-full py-3 px-4 rounded-full text-white font-extrabold bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] hover:opacity-95 transition-all text-xs cursor-pointer uppercase tracking-wider shadow-md shadow-[#bd00ff]/15"
                   >
                     {t('riddleDecrypt')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowRiddleModal(false)}
-                    className="w-full py-2.5 px-4 rounded-full border border-border-card hover:border-[#ff4e17] bg-bg-card text-text-muted font-semibold text-xs transition-all cursor-pointer uppercase tracking-wider"
+                    className="w-full py-2.5 px-4 rounded-full border border-border-card hover:border-[#bd00ff] bg-bg-card text-text-muted font-semibold text-xs transition-all cursor-pointer uppercase tracking-wider"
                   >
                     {t('riddleAbort')}
                   </button>
@@ -588,14 +649,14 @@ export default function App() {
               </form>
             ) : (
               <div className="space-y-5">
-                <div className="p-4 bg-[#ff4e17]/10 border border-[#ff4e17]/30 rounded-2xl flex flex-col items-center">
-                  <span className="text-[10px] font-black uppercase text-[#ff4e17] tracking-wider">
+                <div className="p-4 bg-[#bd00ff]/10 border border-[#bd00ff]/30 rounded-2xl flex flex-col items-center">
+                  <span className="text-[10px] font-black uppercase text-[#bd00ff] tracking-wider">
                     {t('riddleSuccess')}
                   </span>
                   <div className="text-xs font-bold text-text-muted mt-2 uppercase tracking-widest">
                     {t('riddleCredText')}
                   </div>
-                  <div className="text-xl font-bold text-[#ff4e17] mt-1.5 select-all bg-bg-main px-4 py-1.5 border border-dashed border-[#ff4e17]/40 rounded-xl">
+                  <div className="text-xl font-bold text-[#bd00ff] mt-1.5 select-all bg-bg-main px-4 py-1.5 border border-dashed border-[#bd00ff]/40 rounded-xl">
                     nagapavan123
                   </div>
                 </div>
@@ -607,7 +668,7 @@ export default function App() {
                     setRiddleSolved(false);
                     setRiddleAnswer('');
                   }}
-                  className="w-full py-3 px-4 rounded-full text-black font-extrabold bg-[#ff4e17] hover:bg-[#ff4e17]/95 transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer uppercase tracking-wider"
+                  className="w-full py-3 px-4 rounded-full text-white font-extrabold bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] hover:opacity-90 transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer uppercase tracking-wider"
                 >
                   <span>{t('riddleProceed')}</span>
                   <ArrowRight className="h-4.5 w-4.5" />
@@ -621,13 +682,13 @@ export default function App() {
 
       {/* 2. PORTAL LANDING VIEW */}
       {viewMode === 'portal' && (
-        <div className="flex-1 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden bg-bg-main">
+        <div className="flex-1 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden bg-bg-main portal-container">
           
           {/* Background dot grid pattern */}
-          <div className="absolute inset-0 brave-grid opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 brave-grid opacity-35 pointer-events-none" />
 
-          {/* Top orange gradient radial blur */}
-          <div className="absolute top-[-100px] left-[15%] w-[450px] h-[450px] bg-gradient-to-br from-[#ff4e17]/10 to-[#ff9000]/5 rounded-full blur-[90px] pointer-events-none" />
+          {/* Top colored gradient radial blur */}
+          <div className="absolute top-[-100px] left-[15%] w-[450px] h-[450px] bg-gradient-to-br from-[#bd00ff]/10 to-[#0052ff]/5 rounded-full blur-[95px] pointer-events-none" />
 
           {/* Landing Header Navigation / Solve Riddle & Language Switch */}
           <div className="absolute top-6 right-6 flex items-center gap-2">
@@ -635,7 +696,7 @@ export default function App() {
             {/* Language Switch */}
             <button
               onClick={() => setLang(lang === 'en' ? 'te' : 'en')}
-              className="px-4 py-2 border border-border-card hover:border-[#ff4e17] bg-bg-card text-[#ff4e17] text-[10px] uppercase font-bold tracking-wider rounded-full transition-all cursor-pointer font-mono-system"
+              className="px-4 py-2 border border-border-card hover:border-[#bd00ff] bg-bg-card text-[#bd00ff] text-[10px] uppercase font-bold tracking-wider rounded-full transition-all cursor-pointer font-mono-system"
             >
               {lang === 'en' ? 'తెలుగు' : 'ENGLISH'}
             </button>
@@ -646,12 +707,12 @@ export default function App() {
               className="p-2 border border-border-card bg-bg-card text-text-muted hover:text-text-main rounded-full transition-all cursor-pointer"
               aria-label="Toggle Theme"
             >
-              {darkMode ? <Sun className="h-4 w-4 text-[#ff4e17]" /> : <Moon className="h-4 w-4 text-[#ff4e17]" />}
+              {darkMode ? <Sun className="h-4 w-4 text-[#bd00ff]" /> : <Moon className="h-4 w-4 text-[#bd00ff]" />}
             </button>
 
             <button
               onClick={() => setShowRiddleModal(true)}
-              className="px-4 py-2 border border-border-card hover:border-[#ff4e17] bg-bg-card text-text-muted text-[10px] uppercase font-bold tracking-wider rounded-full transition-all cursor-pointer font-mono-system"
+              className="px-4 py-2 border border-border-card hover:border-[#bd00ff] bg-bg-card text-text-muted text-[10px] uppercase font-bold tracking-wider rounded-full transition-all cursor-pointer font-mono-system"
             >
               🔓 {t('unlockAdminTools')}
             </button>
@@ -661,14 +722,14 @@ export default function App() {
             
             {/* Header Store Branding */}
             <div className="flex items-center gap-3.5 mb-4 animate-fade-in">
-              <div className="p-3 bg-[#ff4e17]/10 border border-[#ff4e17]/25 text-[#ff4e17] rounded-full">
+              <div className="p-3 bg-[#bd00ff]/10 border border-[#bd00ff]/25 text-[#bd00ff] rounded-full">
                 <ShoppingBasket className="h-8 w-8" />
               </div>
               <div className="text-left font-display">
                 <h1 className="text-3xl font-extrabold tracking-tight text-text-main sm:text-4xl uppercase">
                   {t('title')}
                 </h1>
-                <p className="text-[10px] font-mono-system text-[#ff4e17] uppercase tracking-[0.22em] leading-none mt-1 font-bold">
+                <p className="text-[10px] font-mono-system text-[#bd00ff] uppercase tracking-[0.22em] leading-none mt-1 font-bold">
                   {t('tagline')}
                 </p>
               </div>
@@ -689,11 +750,11 @@ export default function App() {
                 }}
                 className={`group flex flex-col p-6 rounded-3xl border transition-all duration-300 cursor-pointer ${
                   selectedPortalCard === 'guest'
-                    ? 'bg-bg-card border-[#ff4e17] shadow-xl shadow-[#ff4e17]/5 scale-[1.01]'
-                    : 'bg-bg-card/60 border-border-card hover:border-text-muted/30 hover:scale-[1.005]'
+                    ? 'bg-bg-card/75 glassmorphism border-[#bd00ff] shadow-xl shadow-[#bd00ff]/5 scale-[1.01]'
+                    : 'bg-bg-card/50 glassmorphism border-border-card hover:border-text-muted/30 hover:scale-[1.005]'
                 }`}
               >
-                <div className="p-3.5 bg-[#ff4e17]/5 text-[#ff4e17] border border-[#ff4e17]/15 rounded-2xl w-fit mb-4 group-hover:scale-105 transition-transform">
+                <div className="p-3.5 bg-[#bd00ff]/5 text-[#bd00ff] border border-[#bd00ff]/15 rounded-2xl w-fit mb-4 group-hover:scale-105 transition-transform">
                   <ShoppingBag className="h-7 w-7" />
                 </div>
                 <h3 className="text-lg font-display font-bold uppercase tracking-wider text-text-main mb-2 flex items-center gap-1.5">
@@ -710,13 +771,13 @@ export default function App() {
                       setIsAdmin(false);
                       setViewMode('showcase');
                     }}
-                    className="w-full py-3 px-4 rounded-full text-black font-extrabold bg-gradient-to-r from-[#ff4e17] to-[#ff9000] hover:opacity-95 transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer uppercase tracking-wider shadow-md shadow-[#ff4e17]/15"
+                    className="w-full py-3 px-4 rounded-full text-white font-extrabold bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] hover:opacity-95 transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer uppercase tracking-wider shadow-md shadow-[#bd00ff]/15"
                   >
                     <span>{t('guestButton')}</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 ) : (
-                  <span className="text-xs font-bold text-[#ff4e17] flex items-center gap-1 group-hover:translate-x-1 transition-transform font-mono-system uppercase tracking-wider">
+                  <span className="text-xs font-bold text-[#bd00ff] flex items-center gap-1 group-hover:translate-x-1 transition-transform font-mono-system uppercase tracking-wider">
                     {t('guestSelect')} <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                 )}
@@ -729,11 +790,11 @@ export default function App() {
                 }}
                 className={`flex flex-col p-6 rounded-3xl border transition-all duration-300 cursor-pointer ${
                   selectedPortalCard === 'admin'
-                    ? 'bg-bg-card border-[#ff4e17] shadow-xl shadow-[#ff4e17]/5 scale-[1.01]'
-                    : 'bg-bg-card/60 border-border-card hover:border-text-muted/30 hover:scale-[1.005]'
+                    ? 'bg-bg-card/75 glassmorphism border-[#bd00ff] shadow-xl shadow-[#bd00ff]/5 scale-[1.01]'
+                    : 'bg-bg-card/50 glassmorphism border-border-card hover:border-text-muted/30 hover:scale-[1.005]'
                 }`}
               >
-                <div className="p-3.5 bg-[#ff4e17]/5 text-[#ff4e17] border border-[#ff4e17]/15 rounded-2xl w-fit mb-4">
+                <div className="p-3.5 bg-[#bd00ff]/5 text-[#bd00ff] border border-[#bd00ff]/15 rounded-2xl w-fit mb-4">
                   <LockKeyhole className="h-7 w-7" />
                 </div>
                 <h3 className="text-lg font-display font-bold uppercase tracking-wider text-text-main mb-2">
@@ -757,14 +818,14 @@ export default function App() {
                         value={portalPassword}
                         onChange={(e) => setPortalPassword(e.target.value)}
                         placeholder={t('adminPlaceholder')}
-                        className="flex-1 px-4 py-2 text-xs border border-border-card rounded-full bg-bg-main text-text-main focus:outline-none focus:border-[#ff4e17] font-semibold uppercase tracking-wider"
+                        className="flex-1 px-4 py-2 text-xs border border-border-card rounded-full bg-bg-main text-text-main focus:outline-none focus:border-[#bd00ff] font-semibold uppercase tracking-wider"
                         autoFocus
                         required
                       />
                       <button
                         type="submit"
                         disabled={portalLoading}
-                        className="py-2 px-4 rounded-full bg-[#ff4e17] text-black text-xs font-extrabold transition-all shrink-0 cursor-pointer disabled:opacity-50 uppercase tracking-wider"
+                        className="py-2 px-4 rounded-full bg-[#bd00ff] text-white text-xs font-extrabold transition-all shrink-0 cursor-pointer disabled:opacity-50 uppercase tracking-wider"
                       >
                         {portalLoading ? t('verifying') : t('adminButton').toUpperCase()}
                       </button>
@@ -773,14 +834,14 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => setShowRiddleModal(true)}
-                        className="text-[9px] font-mono-system text-[#ff4e17]/80 hover:text-[#ff4e17] font-bold uppercase tracking-widest hover:underline"
+                        className="text-[9px] font-mono-system text-[#bd00ff]/80 hover:text-[#bd00ff] font-bold uppercase tracking-widest hover:underline"
                       >
                         {t('forgotPass')}
                       </button>
                     </div>
                   </form>
                 ) : (
-                  <span className="text-xs font-bold text-[#ff4e17] flex items-center gap-1 font-mono-system uppercase tracking-wider">
+                  <span className="text-xs font-bold text-[#bd00ff] flex items-center gap-1 font-mono-system uppercase tracking-wider">
                     {t('unlockAdminTools')} <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                 )}
@@ -811,6 +872,9 @@ export default function App() {
             categories={categories}
             selectedCategoryIds={selectedCategoryIds}
             setSelectedCategoryIds={setSelectedCategoryIds}
+            products={products}
+            selectedBrands={selectedBrands}
+            onToggleBrand={handleToggleBrand}
             onSubmitProduct={handleAddProduct}
             formSubmitLoading={formSubmitLoading}
             isAdmin={isAdmin}
@@ -819,6 +883,17 @@ export default function App() {
             onClose={() => setSidebarOpen(false)}
             t={t}
             translateCategory={translateCategory}
+            focusedProduct={focusedProduct}
+            onAddBrandOption={handleAddBrandOption}
+            brandAddState={{
+              newBrandName, setNewBrandName,
+              newBrandPrice, setNewBrandPrice,
+              newBrandInStock, setNewBrandInStock,
+              brandAddSuccess, setBrandAddSuccess,
+              brandAddError, setBrandAddError,
+              brandAddLoading, setBrandAddLoading
+            }}
+            lang={lang}
           />
 
           {/* Main Content Pane */}
@@ -832,6 +907,7 @@ export default function App() {
               toggleDarkMode={() => setDarkMode(!darkMode)}
               isAdmin={isAdmin}
               onMenuToggle={() => setSidebarOpen(true)}
+              onExit={handleExitToPortal}
               lang={lang}
               setLang={setLang}
               t={t}
@@ -842,13 +918,13 @@ export default function App() {
               
               {/* HERO: Focused Product Specification Panel */}
               {focusedProduct ? (
-                <div className="relative border border-[#ff4e17]/30 bg-bg-card p-6 rounded-2xl shadow-xl shadow-[#ff4e17]/5 animate-fade-in">
+                <div className="relative border border-[#bd00ff]/30 bg-bg-card/75 glassmorphism p-6 rounded-2xl shadow-xl shadow-[#bd00ff]/5 animate-fade-in">
                   
                   <div className="mb-4">
                     <span className="text-[10px] font-mono-system text-text-muted uppercase tracking-widest block mb-1.5 font-bold">
                       {t('heroTitle')}
                     </span>
-                    <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#ff4e17] uppercase leading-none">
+                    <h2 className="font-display text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] uppercase leading-none">
                       {focusedProduct.name}
                     </h2>
                     <p className="font-mono-system text-[11px] text-text-muted mt-2 uppercase tracking-wide">
@@ -860,21 +936,47 @@ export default function App() {
                     {focusedProduct.description || (lang === 'en' ? `Fresh and high-quality ${focusedProduct.name.toLowerCase()} allocated to sector ${focusedCategoryName.toLowerCase()}.` : `${translateCategory(focusedCategoryName)} విభాగంలో కేటాయించబడిన తాజా మరియు నాణ్యమైన ${focusedProduct.name}.`)}
                   </p>
 
-                  {/* Rounded action buttons */}
-                  <div className="flex flex-wrap gap-4 font-mono-system">
-                    <button 
-                      onClick={() => alert(lang === 'te' ? `వస్తువు ID: 0${focusedProduct.id} సేకరణ కోసం సిద్ధంగా ఉంది.` : `Component ID: 0${focusedProduct.id} queued for acquisition.`)}
-                      className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#ff4e17] to-[#ff9000] text-black font-extrabold uppercase text-xs transition-all hover:opacity-90 cursor-pointer shadow-md shadow-[#ff4e17]/10"
-                    >
-                      {t('acquireBtn')}
-                    </button>
-                    <button 
-                      onClick={() => alert(lang === 'te' ? `${focusedProduct.name.toUpperCase()} కోసం సాంకేతిక పత్రం సృష్టించబడింది.` : `Technical data sheet generated for ${focusedProduct.name.toUpperCase()}.`)}
-                      className="px-6 py-2.5 rounded-full border border-border-card hover:border-[#ff4e17] bg-transparent text-text-main font-extrabold uppercase text-xs transition-all hover:bg-bg-card cursor-pointer"
-                    >
-                      {t('specSheetBtn')}
-                    </button>
+                  {/* Brand Options Section */}
+                  <div className="mt-5 border-t border-border-card pt-5">
+                    <h3 className="font-display text-sm font-bold uppercase tracking-wider text-text-main mb-3 flex items-center gap-2">
+                      <ShoppingBag className="h-4 w-4 text-[#bd00ff]" />
+                      {t('brandsTitle')}
+                    </h3>
+
+                    {/* Existing Brand Options List */}
+                    {focusedProduct.brand_options && focusedProduct.brand_options.length > 0 ? (
+                      <div className="space-y-2 mb-4">
+                        {focusedProduct.brand_options.map((opt, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-bg-main/50 border border-border-card font-mono-system text-xs transition-all hover:border-[#bd00ff]/30"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#bd00ff] shrink-0" />
+                              <span className="font-bold text-text-main uppercase tracking-wide">{opt.name}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-[10px] text-text-muted font-semibold uppercase">{opt.price || 'Market Price'}</span>
+                              <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                                opt.in_stock
+                                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                  : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                              }`}>
+                                {opt.in_stock ? t('inStockOption') : t('outOfStockOption')}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-4 px-3 border border-dashed border-border-card rounded-xl mb-4">
+                        <p className="text-[10px] text-text-muted/60 font-mono-system uppercase tracking-wider font-bold">
+                          {t('noBrandsPlaceholder')}
+                        </p>
+                      </div>
+                    )}
                   </div>
+
                 </div>
               ) : (
                 <div className="border border-dashed border-border-card bg-bg-card p-6 rounded-2xl text-center font-mono-system">
@@ -887,78 +989,17 @@ export default function App() {
                 </div>
               )}
 
-              {/* Sector Navigation & Manufacturer Teams */}
-              <div className="border border-border-card bg-bg-card p-5 rounded-2xl space-y-4">
-                
-                {/* 1. Racing Sectors (Categories) */}
-                <div>
-                  <h4 className="font-mono-system text-[10px] text-text-muted/50 uppercase tracking-[0.2em] mb-3 font-bold flex items-center gap-1.5">
-                    <FolderOpen className="h-3.5 w-3.5 text-[#ff4e17]" />
-                    {t('activeRacingSector')}
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.slice(0, 10).map(cat => {
-                      const isSelected = selectedCategoryIds.includes(cat.id);
-                      return (
-                        <button
-                          key={cat.id}
-                          onClick={() => {
-                            if (isSelected) {
-                              setSelectedCategoryIds(selectedCategoryIds.filter(id => id !== cat.id));
-                            } else {
-                              setSelectedCategoryIds([...selectedCategoryIds, cat.id]);
-                            }
-                          }}
-                          className={`px-4 py-2 text-[10px] uppercase font-bold border rounded-full transition-all cursor-pointer font-mono-system tracking-wider ${
-                            isSelected
-                              ? 'bg-[#ff4e17] border-transparent text-black font-extrabold'
-                              : 'border-border-card text-text-muted hover:text-text-main bg-bg-main'
-                          }`}
-                        >
-                          {translateCategory(cat.name)}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
 
-                {/* 2. Manufacturer Teams (Brands) */}
-                <div className="border-t border-border-card pt-4">
-                  <h4 className="font-mono-system text-[10px] text-text-muted/50 uppercase tracking-[0.2em] mb-2.5 font-bold">
-                    // {t('manufacturerTeams')}
-                  </h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['ALL TEAMS', 'COLGATE', 'DOVE', 'PATANJALI', 'BRITANNIA', 'NESTLE', 'ITC', 'PARLE'].map(brand => {
-                      const isSelected = selectedBrand === brand;
-                      const displayName = brand === 'ALL TEAMS' ? t('anyTeam') : brand;
-                      return (
-                        <button
-                          key={brand}
-                          onClick={() => setSelectedBrand(brand)}
-                          className={`px-3.5 py-1.5 text-[10px] uppercase font-mono-system tracking-wider border rounded-full cursor-pointer transition-all ${
-                            isSelected
-                              ? 'border-[#ff4e17] text-[#ff4e17] bg-[#ff4e17]/10 font-bold'
-                              : 'border-border-card text-text-muted hover:text-text-main bg-bg-main'
-                          }`}
-                        >
-                          {displayName}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-              </div>
 
               {/* Header Dashboard & Filters Bar */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 border border-border-card bg-bg-card rounded-2xl font-mono-system">
                 <div>
                   <h2 className="text-sm font-bold text-text-main flex items-center gap-2 uppercase tracking-wide">
-                    <ShoppingBasket className="h-4.5 w-4.5 text-[#ff4e17]" />
+                    <ShoppingBasket className="h-4.5 w-4.5 text-[#bd00ff]" />
                     {t('deployedTitle')}
                   </h2>
                   <p className="text-[9px] text-text-muted/55 font-bold uppercase tracking-wider mt-0.5">
-                    {t('filtersApplied')} {statusFilter.toUpperCase()} STATUS • {selectedCategoryIds.length} {lang === 'te' ? 'విభాగాలు' : 'SECTORS'} • {selectedBrand === 'ALL TEAMS' ? t('anyTeam') : selectedBrand} {lang === 'te' ? 'కంపెనీ' : 'MANUFACTURER'}
+                    {t('filtersApplied')} {statusFilter.toUpperCase()} STATUS • {selectedCategoryIds.length} {lang === 'te' ? 'విభాగాలు' : 'SECTORS'} • {selectedBrands.length === 10 ? (lang === 'te' ? 'అన్ని బ్రాండ్లు' : 'ALL BRANDS') : `${selectedBrands.length} BRANDS`}
                   </p>
                 </div>
 
@@ -968,7 +1009,7 @@ export default function App() {
                     onClick={() => setStatusFilter('all')}
                     className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
                       statusFilter === 'all'
-                        ? 'bg-[#ff4e17] text-black font-extrabold'
+                        ? 'bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] text-white font-extrabold'
                         : 'text-text-muted hover:text-text-main'
                     }`}
                   >
@@ -978,7 +1019,7 @@ export default function App() {
                     onClick={() => setStatusFilter('in_stock')}
                     className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
                       statusFilter === 'in_stock'
-                        ? 'bg-[#ff4e17] text-black font-extrabold'
+                        ? 'bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] text-white font-extrabold'
                         : 'text-text-muted hover:text-text-main'
                     }`}
                   >
@@ -1000,7 +1041,7 @@ export default function App() {
               {/* Catalog Product Grid */}
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4 font-mono-system">
-                  <RefreshCw className="h-8 w-8 text-[#ff4e17] animate-spin" />
+                  <RefreshCw className="h-8 w-8 text-[#bd00ff] animate-spin" />
                   <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
                     {lang === 'te' ? 'ఇన్వెంటరీ వివరాలను సింక్ చేస్తోంది...' : 'SYNCING INVENTORY SECTOR READOUTS...'}
                   </p>
@@ -1012,7 +1053,6 @@ export default function App() {
                       key={product.id}
                       product={product}
                       categories={categories}
-                      onDeleteProduct={handleDeleteProduct}
                       onToggleStock={handleToggleStock}
                       isAdmin={isAdmin}
                       isSelected={focusedProduct?.id === product.id}
@@ -1036,9 +1076,9 @@ export default function App() {
 
             {/* Footer */}
             <footer className="w-full border-t border-border-card py-6 text-center text-[10px] text-text-muted/50 bg-bg-main font-mono-system uppercase tracking-widest mt-auto">
-              <p>&copy; 2026 {lang === 'te' ? 'నాగ పవన్ కిరాణా మరియు జనరల్ మర్చంట్స్. డెవలప్ చేయబడింది FastAPI, React & Tailwind CSS తో.' : 'Naga Pavan Kirana and General Merchants. Developed with FastAPI, React & Tailwind CSS.'}</p>
-              <p className="mt-1.5 font-bold text-[#ff4e17] flex items-center justify-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-[#ff4e17] shrink-0" />
+              <p>&copy; 2026 {lang === 'te' ? 'నాగ పవన్ మర్చండైజ్ మరియు జనరల్ మర్చంట్స్. డెవలప్ చేయబడింది FastAPI, React & Tailwind CSS తో.' : 'Naga Pavan Merchandise and General Merchants. Developed with FastAPI, React & Tailwind CSS.'}</p>
+              <p className="mt-1.5 font-bold text-[#bd00ff] flex items-center justify-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-[#bd00ff] shrink-0" />
                 {lang === 'te' ? 'స్టేట్‌లెస్ అసమకాలిక ఇన్వెంటరీ కంట్రోల్ ఇంజన్ v3.0' : 'Stateless Asynchronous Inventory Control Engine v3.0'}
               </p>
             </footer>

@@ -50,6 +50,19 @@ SEED_DATA = {
 }
 
 def seed_database(db):
+    # Upgrade existing database collections to support brand options if needed
+    if db.products.find_one() is not None and db.products.find_one({"brand_options": {"$exists": True}}) is None:
+        print("Upgrading database schema: dropping old collections to re-seed with brand options...")
+        db.categories.drop()
+        db.products.drop()
+
+    # Drop and re-seed if descriptions contain the old store name suffix
+    sample = db.products.find_one()
+    if sample is not None and "available at" in sample.get("description", ""):
+        print("Upgrading database schema: stripping store name suffix from descriptions by dropping and re-seeding...")
+        db.categories.drop()
+        db.products.drop()
+
     # Verify if database has already been seeded to avoid duplicates
     if db.categories.find_one() is not None:
         print("Database already seeded. Skipping...")
@@ -62,6 +75,19 @@ def seed_database(db):
     categories_to_insert = []
     products_to_insert = []
     
+    DEFAULT_BRANDS = {
+        "Cookies": ["Good Day Cashew", "Hide & Seek Chocolate", "Oreo Vanilla", "Britannia Bourbon"],
+        "Instant coffee": ["Bru Gold", "Nescafe Classic", "Tata Coffee Grand"],
+        "Tea leaves": ["Red Label Tea", "Taj Mahal Tea", "Tata Tea Premium"],
+        "Soap": ["Lifebuoy Total", "Dettol Original", "Dove Cream Beauty", "Santoor Sandal"],
+        "Shampoo": ["Clinic Plus", "Head & Shoulders", "Dove Intense Repair", "Sunsilk Black"],
+        "Toothpaste": ["Colgate Strong Teeth", "Pepsodent Germicheck", "Close-up Red Hot", "Sensodyne Rapid Relief"],
+        "Chips": ["Lays Classic Salted", "Kurkure Masala Munch", "Bingo Mad Angles", "Pringles Sour Cream"],
+        "Soft drinks": ["Coca-Cola", "Thums Up", "Sprite", "Limca", "Maaza"],
+        "Ghee": ["Amul Pure Ghee", "Nandini Ghee", "GRB Ghee", "Patanjali Cow Ghee"],
+        "Butter": ["Amul Butter (Salted)", "Amul Butter (Unsalted)"]
+    }
+    
     for category_name, product_list in SEED_DATA.items():
         cat_id = category_id_counter
         category_id_counter += 1
@@ -73,13 +99,23 @@ def seed_database(db):
         })
         
         for prod_name in product_list:
+            prod_brands = []
+            if prod_name in DEFAULT_BRANDS:
+                for b_name in DEFAULT_BRANDS[prod_name]:
+                    prod_brands.append({
+                        "name": b_name,
+                        "price": "Market Price",
+                        "in_stock": True
+                      })
+            
             products_to_insert.append({
                 "id": product_id_counter,
                 "category_id": cat_id,
                 "name": prod_name,
-                "description": f"Fresh and high-quality {prod_name.lower()} available at Naga Pavan Kirana and General Merchants.",
+                "description": f"Fresh and high-quality {prod_name.lower()}.",
                 "default_price": "Market Price",
-                "in_stock": True
+                "in_stock": True,
+                "brand_options": prod_brands
             })
             product_id_counter += 1
             
@@ -102,7 +138,7 @@ async def lifespan(app: FastAPI):
 
 # Initialize FastAPI with metadata for swagger/redoc documentation
 app = FastAPI(
-    title="Naga Pavan Kirana and General Merchants - Showcase API",
+    title="Naga Pavan Merchandise and General Merchants - Showcase API",
     description="Backend API for inventory visibility, catalog search, and retail stock management.",
     version="1.0.0",
     lifespan=lifespan
@@ -195,7 +231,8 @@ async def create_product(product_in: schemas.ProductCreate, db=Depends(get_db)):
         "name": product_in.name,
         "description": product_in.description,
         "default_price": product_in.default_price,
-        "in_stock": product_in.in_stock
+        "in_stock": product_in.in_stock,
+        "brand_options": []
     }
     
     db.products.insert_one(db_product)
@@ -248,3 +285,29 @@ async def toggle_product_stock(id: int, db=Depends(get_db)):
     category = db.categories.find_one({"id": product["category_id"]}, {"_id": 0})
     product["category"] = category
     return product
+
+@app.post("/api/products/{id}/options", response_model=schemas.Product)
+async def add_product_option(id: int, option_in: schemas.BrandOption, db=Depends(get_db)):
+    """Add a new brand option to an existing product."""
+    product = db.products.find_one({"id": id})
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Product with ID {id} not found."
+        )
+    
+    # Append the brand option to the product's brand_options list
+    db.products.update_one(
+        {"id": id},
+        {"$push": {"brand_options": option_in.model_dump()}}
+    )
+    
+    # Retrieve updated product
+    updated_product = db.products.find_one({"id": id})
+    updated_product.pop("_id", None)
+    
+    # Retrieve and populate category
+    category = db.categories.find_one({"id": updated_product["category_id"]}, {"_id": 0})
+    updated_product["category"] = category
+    return updated_product
+
