@@ -155,6 +155,14 @@ app.add_middleware(
 
 # --- API ROUTES ---
 
+@app.get("/")
+async def root():
+    return {
+        "status": "online",
+        "message": "Welcome to the Naga Pavan Merchandise and General Merchants Showcase API",
+        "docs": "/docs"
+    }
+
 @app.get("/api/categories", response_model=List[schemas.Category])
 async def get_categories(db=Depends(get_db)):
     """Fetch all available inventory categories."""
