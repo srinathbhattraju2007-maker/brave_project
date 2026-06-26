@@ -25,7 +25,7 @@ const TRANSLATIONS = {
     forgotPass: "forgot password? solve riddle key",
     address: "📍 MAIN BAZAR, NEAR TEMPLE STREET",
     timings: "⏰ ACTIVE DAILY: 07:00 - 22:00 IST",
-    
+
     // Riddle
     riddleTitle: "// VAULT DECRYPTION GRID RIDDLE",
     riddleCriteria: "SOLVE SECURITY CRITERIA TO DECRYPT AUTH:",
@@ -37,7 +37,7 @@ const TRANSLATIONS = {
     riddleCredText: "THE SECRET ACCESS CREDENTIAL IS:",
     riddleProceed: "PROCEED TO PORTALS",
     riddleError: "Incorrect decryption coordinates. Security reset triggered.",
-    
+
     // Header
     searchPlaceholder: "SEARCH SECTOR INVENTORY...",
     stability: "SYS STABILITY:",
@@ -45,7 +45,7 @@ const TRANSLATIONS = {
     guestOp: "GUEST_OP",
     merchantCoords: "MERCHANT COORDINATES",
     activeHours: "ACTIVE HOURS: 07:00 - 22:00 IST",
-    
+
     // Sidebar
     sectorsTitle: "Choose Active Sectors",
     filterPlaceholder: "FILTER SECTORS...",
@@ -62,7 +62,7 @@ const TRANSLATIONS = {
     stockAvailable: "STOCK AVAILABLE",
     btnRegister: "REGISTER PRODUCT",
     exitDecryptor: "EXIT DECRYPTOR",
-    
+
     // Catalog
     heroTitle: "// FOCUSED COMPONENT TELEMETRY",
     acquireBtn: "ACQUIRE COMPONENT",
@@ -130,7 +130,7 @@ const TRANSLATIONS = {
     forgotPass: "పాస్‌వర్డ్ మర్చిపోయారా? పొడుపుకథను పూరించండి",
     address: "📍 మెయిన్ బజార్, దేవాలయం వీధి దగ్గర",
     timings: "⏰ ప్రతిరోజూ అందుబాటులో ఉంటుంది: ఉదయం 7:00 - రాత్రి 10:00 IST",
-    
+
     // Riddle
     riddleTitle: "// వాల్ట్ డిక్రిప్షన్ గ్రిడ్ పొడుపుకథ",
     riddleCriteria: "యాక్సెస్ డిక్రిప్ట్ చేయడానికి పొడుపుకథను పూరించండి:",
@@ -142,7 +142,7 @@ const TRANSLATIONS = {
     riddleCredText: "రహస్య పాస్‌వర్డ్:",
     riddleProceed: "పోర్టల్‌కు వెళ్ళండి",
     riddleError: "తప్పుడు సమాధానం. మళ్లీ ప్రయత్నించండి.",
-    
+
     // Header
     searchPlaceholder: "శోధించండి...",
     stability: "వ్యవస్థ స్థిరత్వం:",
@@ -150,7 +150,7 @@ const TRANSLATIONS = {
     guestOp: "గెస్ట్",
     merchantCoords: "మర్చంట్ వివరాలు",
     activeHours: "పనివేళలు: ఉదయం 7:00 - రాత్రి 10:00 IST",
-    
+
     // Sidebar
     sectorsTitle: "వర్గాలను ఎంచుకోండి",
     filterPlaceholder: "శోధించండి...",
@@ -167,7 +167,7 @@ const TRANSLATIONS = {
     stockAvailable: "స్టాక్ అందుబాటులో ఉంది",
     btnRegister: "సమర్పించు",
     exitDecryptor: "లాగ్ అవుట్",
-    
+
     // Catalog
     heroTitle: "// ఎంపిక చేసిన వస్తువు వివరాలు",
     acquireBtn: "వస్తువును సేకరించు",
@@ -254,7 +254,7 @@ export default function App() {
       setSelectedBrands([...selectedBrands, brand]);
     }
   };
-  
+
   // Focused Hero Product
   const [focusedProduct, setFocusedProduct] = useState(null);
 
@@ -277,7 +277,7 @@ export default function App() {
     const token = localStorage.getItem('adminToken');
     return token === 'nagapavan_admin_secret_token';
   });
-  
+
   // Mobile Sidebar Drawer State
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -297,13 +297,13 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [formSubmitLoading, setFormSubmitLoading] = useState(false);
-  
+
   // Theme State
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('themePreference');
     return saved !== null ? JSON.parse(saved) : true;
   });
-  
+
   // Language State
   const [lang, setLang] = useState(() => {
     return localStorage.getItem('langPreference') || 'en';
@@ -387,7 +387,7 @@ export default function App() {
       const res = await axios.get(url);
       const sanitized = sanitizeProducts(res.data);
       setProducts(sanitized);
-      
+
       if (sanitized.length > 0 && !focusedProduct) {
         setFocusedProduct(sanitized[0]);
       }
@@ -544,9 +544,9 @@ export default function App() {
 
     const MANUFACTURERS = ['Colgate', 'Dove', 'Patanjali', 'Britannia', 'Nestle', 'ITC', 'Parle', 'Amul', 'Tata', 'HUL'];
     if (selectedBrands.length < MANUFACTURERS.length) {
-      list = list.filter(p => 
-        selectedBrands.some(brand => 
-          p.name.toUpperCase().includes(brand.toUpperCase()) || 
+      list = list.filter(p =>
+        selectedBrands.some(brand =>
+          p.name.toUpperCase().includes(brand.toUpperCase()) ||
           p.description?.toUpperCase().includes(brand.toUpperCase()) ||
           (p.brand_options && p.brand_options.some(opt => opt.name.toUpperCase().includes(brand.toUpperCase())))
         )
@@ -585,12 +585,12 @@ export default function App() {
 
   return (
     <div className="min-h-full bg-bg-main text-text-main flex flex-col font-sans select-none transition-colors duration-200">
-      
+
       {/* 1. RIDDLE POP-UP MODAL OVERLAY */}
       {showRiddleModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md font-mono-system">
           <div className="relative w-full max-w-md p-6 rounded-3xl bg-bg-card border border-border-card shadow-2xl animate-scale-in text-center portal-container">
-            
+
             {/* Header */}
             <div className="flex flex-col items-center mb-5">
               <div className="p-3 bg-[#bd00ff]/10 border border-[#bd00ff]/25 text-[#bd00ff] mb-3 rounded-full">
@@ -630,7 +630,7 @@ export default function App() {
                     required
                   />
                 </div>
-                
+
                 <div className="flex flex-col gap-2">
                   <button
                     type="submit"
@@ -683,7 +683,7 @@ export default function App() {
       {/* 2. PORTAL LANDING VIEW */}
       {viewMode === 'portal' && (
         <div className="flex-1 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden bg-bg-main portal-container">
-          
+
           {/* Background dot grid pattern */}
           <div className="absolute inset-0 brave-grid opacity-35 pointer-events-none" />
 
@@ -692,7 +692,7 @@ export default function App() {
 
           {/* Landing Header Navigation / Solve Riddle & Language Switch */}
           <div className="absolute top-6 right-6 flex items-center gap-2">
-            
+
             {/* Language Switch */}
             <button
               onClick={() => setLang(lang === 'en' ? 'te' : 'en')}
@@ -700,7 +700,7 @@ export default function App() {
             >
               {lang === 'en' ? 'తెలుగు' : 'ENGLISH'}
             </button>
-            
+
             {/* Dark Mode toggle on landing */}
             <button
               onClick={() => setDarkMode(!darkMode)}
@@ -719,7 +719,7 @@ export default function App() {
           </div>
 
           <div className="w-full max-w-4xl flex flex-col items-center z-10">
-            
+
             {/* Header Store Branding */}
             <div className="flex items-center gap-3.5 mb-4 animate-fade-in">
               <div className="p-3 bg-[#bd00ff]/10 border border-[#bd00ff]/25 text-[#bd00ff] rounded-full">
@@ -741,18 +741,17 @@ export default function App() {
 
             {/* Option Cards Columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-              
+
               {/* Card 1: Guest User */}
-              <div 
+              <div
                 onClick={() => {
                   setSelectedPortalCard('guest');
                   setPortalError('');
                 }}
-                className={`group flex flex-col p-6 rounded-3xl border transition-all duration-300 cursor-pointer ${
-                  selectedPortalCard === 'guest'
+                className={`group flex flex-col p-6 rounded-3xl border transition-all duration-300 cursor-pointer ${selectedPortalCard === 'guest'
                     ? 'bg-bg-card/75 glassmorphism border-[#bd00ff] shadow-xl shadow-[#bd00ff]/5 scale-[1.01]'
                     : 'bg-bg-card/50 glassmorphism border-border-card hover:border-text-muted/30 hover:scale-[1.005]'
-                }`}
+                  }`}
               >
                 <div className="p-3.5 bg-[#bd00ff]/5 text-[#bd00ff] border border-[#bd00ff]/15 rounded-2xl w-fit mb-4 group-hover:scale-105 transition-transform">
                   <ShoppingBag className="h-7 w-7" />
@@ -763,7 +762,7 @@ export default function App() {
                 <p className="text-xs text-text-muted leading-relaxed font-medium mb-6 flex-grow">
                   {t('guestDesc')}
                 </p>
-                
+
                 {selectedPortalCard === 'guest' ? (
                   <button
                     onClick={(e) => {
@@ -784,15 +783,14 @@ export default function App() {
               </div>
 
               {/* Card 2: Authenticated Admin */}
-              <div 
+              <div
                 onClick={() => {
                   setSelectedPortalCard('admin');
                 }}
-                className={`flex flex-col p-6 rounded-3xl border transition-all duration-300 cursor-pointer ${
-                  selectedPortalCard === 'admin'
+                className={`flex flex-col p-6 rounded-3xl border transition-all duration-300 cursor-pointer ${selectedPortalCard === 'admin'
                     ? 'bg-bg-card/75 glassmorphism border-[#bd00ff] shadow-xl shadow-[#bd00ff]/5 scale-[1.01]'
                     : 'bg-bg-card/50 glassmorphism border-border-card hover:border-text-muted/30 hover:scale-[1.005]'
-                }`}
+                  }`}
               >
                 <div className="p-3.5 bg-[#bd00ff]/5 text-[#bd00ff] border border-[#bd00ff]/15 rounded-2xl w-fit mb-4">
                   <LockKeyhole className="h-7 w-7" />
@@ -866,7 +864,7 @@ export default function App() {
       {/* 3. MAIN ACTIVE SHOWCASE VIEW (Split Sidebar-on-Left Layout) */}
       {viewMode === 'showcase' && (
         <div className="flex-grow flex">
-          
+
           {/* Sidebar */}
           <Sidebar
             categories={categories}
@@ -898,7 +896,7 @@ export default function App() {
 
           {/* Main Content Pane */}
           <div className="flex-1 lg:pl-72 flex flex-col min-h-screen bg-bg-main">
-            
+
             {/* Top Header Bar */}
             <BrandedHeader
               searchQuery={searchQuery}
@@ -915,11 +913,11 @@ export default function App() {
 
             {/* Main Product Catalog Panel */}
             <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-5xl w-full mx-auto space-y-6">
-              
+
               {/* HERO: Focused Product Specification Panel */}
               {focusedProduct ? (
                 <div className="relative border border-[#bd00ff]/30 bg-bg-card/75 glassmorphism p-6 rounded-2xl shadow-xl shadow-[#bd00ff]/5 animate-fade-in">
-                  
+
                   <div className="mb-4">
                     <span className="text-[10px] font-mono-system text-text-muted uppercase tracking-widest block mb-1.5 font-bold">
                       {t('heroTitle')}
@@ -957,11 +955,10 @@ export default function App() {
                             </div>
                             <div className="flex items-center gap-3">
                               <span className="text-[10px] text-text-muted font-semibold uppercase">{opt.price || 'Market Price'}</span>
-                              <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
-                                opt.in_stock
+                              <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${opt.in_stock
                                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                                   : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                              }`}>
+                                }`}>
                                 {opt.in_stock ? t('inStockOption') : t('outOfStockOption')}
                               </span>
                             </div>
@@ -1007,31 +1004,28 @@ export default function App() {
                 <div className="flex bg-bg-main border border-border-card p-1 rounded-full w-full sm:w-auto text-[10px] font-bold tracking-wider uppercase">
                   <button
                     onClick={() => setStatusFilter('all')}
-                    className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
-                      statusFilter === 'all'
+                    className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${statusFilter === 'all'
                         ? 'bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] text-white font-extrabold'
                         : 'text-text-muted hover:text-text-main'
-                    }`}
+                      }`}
                   >
                     {t('allUnits')} ({products.length})
                   </button>
                   <button
                     onClick={() => setStatusFilter('in_stock')}
-                    className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
-                      statusFilter === 'in_stock'
+                    className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${statusFilter === 'in_stock'
                         ? 'bg-gradient-to-r from-[#0052ff] via-[#bd00ff] to-[#00f0ff] text-white font-extrabold'
                         : 'text-text-muted hover:text-text-main'
-                    }`}
+                      }`}
                   >
                     {t('inStock')} ({totalInStock})
                   </button>
                   <button
                     onClick={() => setStatusFilter('out_stock')}
-                    className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
-                      statusFilter === 'out_stock'
+                    className={`flex-grow sm:flex-initial px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${statusFilter === 'out_stock'
                         ? 'bg-rose-600 text-white font-extrabold'
                         : 'text-text-muted hover:text-text-main'
-                    }`}
+                      }`}
                   >
                     {t('outStock')} ({totalOutStock})
                   </button>
